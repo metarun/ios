@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>% Calculator</title>
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234A90E2'/%3E%3Ctext x='50' y='50' font-family='Arial' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E%25%3C/text%3E%3C/svg%3E">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f2f2f7;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            appearance: none;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .calculate-btn {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .clear-btn {
+            background: #f3f4f6;
+            color: #ef4444;
+        }
+
+        .result {
+            display: none;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .result.positive {
+            border-left: 4px solid #22c55e;
+        }
+
+        .result.negative {
+            border-left: 4px solid #ef4444;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        .error {
+            display: none;
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .install-prompt {
+            text-align: center;
+            padding: 10px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Percentage Calculator</h1>
+    </div>
+
+    <div class="card">
+        <div class="input-group">
+            <label for="xValue">Initial Value (X)</label>
+            <input type="number" id="xValue" placeholder="Enter initial value" step="any">
+            <div id="xError" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="yValue">Final Value (Y)</label>
+            <input type="number" id="yValue" placeholder="Enter final value" step="any">
+            <div id="yError" class="error"></div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">Calculate</button>
+        <button class="clear-btn" onclick="clearFields()">Clear</button>
+
+        <div id="result" class="result">
+            <div class="result-row">
+                <span class="result-label">Percentage Change:</span>
+                <span id="percentageChange" class="result-value"></span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Absolute Change:</span>
+                <span id="absoluteChange" class="result-value"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="installPrompt" class="install-prompt">
+        📱 Add this app to your home screen:<br>
+        Tap the share button (📤) and choose "Add to Home Screen"
+    </div>
+
+    <script>
+        // Show install prompt for iOS users
+        if (navigator.standalone !== true) {
+            document.getElementById('installPrompt').style.display = 'block';
+        }
+
+        function calculate() {
+            clearErrors();
+            const xInput = document.getElementById('xValue');
+            const yInput = document.getElementById('yValue');
+            const resultDiv = document.getElementById('result');
+            
+            const x = parseFloat(xInput.value);
+            const y = parseFloat(yInput.value);
+
+            if (isNaN(x)) {
+                showError('xError', 'Please enter a valid number');
+                return;
+            }
+            if (isNaN(y)) {
+                showError('yError', 'Please enter a valid number');
+                return;
+            }
+            if (x === 0) {
+                showError('xError', 'Initial value cannot be zero');
+                return;
+            }
+
+            const absoluteChange = y - x;
+            const percentageChange = (absoluteChange / Math.abs(x)) * 100;
+            
+            document.getElementById('percentageChange').textContent = 
+                `${percentageChange.toFixed(2)}%`;
+            document.getElementById('absoluteChange').textContent = 
+                absoluteChange.toFixed(2);
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result ' + (percentageChange >= 0 ? 'positive' : 'negative');
+        }
+
+        function clearFields() {
+            document.getElementById('xValue').value = '';
+            document.getElementById('yValue').value = '';
+            document.getElementById('result').style.display = 'none';
+            clearErrors();
+        }
+
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function clearErrors() {
+            document.getElementById('xError').style.display = 'none';
+            document.getElementById('yError').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
