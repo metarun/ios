@@ -111,10 +111,13 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .result-row:last-child {
             margin-bottom: 0;
+            border-bottom: none;
         }
 
         .result-label {
@@ -166,6 +169,10 @@
 
         <div id="result" class="result">
             <div class="result-row">
+                <span class="result-label">Y is what % of X:</span>
+                <span id="yPercentOfX" class="result-value"></span>
+            </div>
+            <div class="result-row">
                 <span class="result-label">Percentage Change:</span>
                 <span id="percentageChange" class="result-value"></span>
             </div>
@@ -177,7 +184,7 @@
     </div>
 
     <div id="installPrompt" class="install-prompt">
-        📱 Add this t app to your home screen:<br>
+        📱 Add this app to your home screen:<br>
         Tap the share button (📤) and choose "Add to Home Screen"
     </div>
 
@@ -209,9 +216,16 @@
                 return;
             }
 
+            // Calculate Y as percentage of X
+            const yPercentOfX = (y / x) * 100;
+
+            // Calculate change
             const absoluteChange = y - x;
             const percentageChange = (absoluteChange / Math.abs(x)) * 100;
             
+            // Update results
+            document.getElementById('yPercentOfX').textContent = 
+                `${yPercentOfX.toFixed(2)}%`;
             document.getElementById('percentageChange').textContent = 
                 `${percentageChange.toFixed(2)}%`;
             document.getElementById('absoluteChange').textContent = 
