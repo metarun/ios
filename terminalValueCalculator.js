@@ -1,37 +1,33 @@
 function calculateTerminalValue() {
-    const terminalInput = document.getElementById('terminalValue');
-    const rfrInput = document.getElementById('rfrValue');
-    const earningsInput = document.getElementById('earningsValue');
-    const resultDiv = document.getElementById('terminalResult');
-    
-    const tv = parseFloat(terminalInput.value);
-    const rfr = parseFloat(rfrInput.value) / 100;  // Convert RFR to decimal for calculation
-    const earnings = parseFloat(earningsInput.value);
+    const terminalValue = parseFloat(document.getElementById('terminalValue').value);
+    const rfrValue = parseFloat(document.getElementById('rfrValue').value);
+    const earningsValue = parseFloat(document.getElementById('earningsValue').value);
+    const resultContainer = document.getElementById('terminalResult');
 
-    const filledFields = [!isNaN(tv), !isNaN(rfr), !isNaN(earnings)].filter(Boolean).length;
+    // Clear previous result
+    resultContainer.style.display = 'none';
 
-    // Check if exactly two fields are filled
-    if (filledFields !== 2) {
-        alert("Please fill exactly two of the three fields.");
+    // Validation for at least two fields
+    const enteredValues = [terminalValue, rfrValue, earningsValue].filter(value => !isNaN(value));
+    if (enteredValues.length < 2) {
+        resultContainer.textContent = 'Please enter at least two values for calculation.';
+        resultContainer.style.display = 'block';
         return;
     }
 
-    let calculatedValue;
-
-    // Calculate the missing value based on which two fields are filled
-    if (isNaN(tv)) {
-        // Calculate Terminal Value (TV) when RFR and Earnings are provided
-        calculatedValue = earnings / (1 + rfr);
-        document.getElementById('calculatedValue').textContent = `Calculated Terminal Value: ${calculatedValue.toFixed(2)}`;
-    } else if (isNaN(rfr)) {
-        // Calculate Risk-Free Rate (RFR) when TV and Earnings are provided
-        calculatedValue = (earnings / tv) - 1;
-        document.getElementById('calculatedValue').textContent = `Calculated Risk-Free Rate: ${(calculatedValue * 100).toFixed(2)}%`;
-    } else if (isNaN(earnings)) {
-        // Calculate Earnings when TV and RFR are provided
-        calculatedValue = tv * (1 + rfr);
-        document.getElementById('calculatedValue').textContent = `Calculated Earnings: ${calculatedValue.toFixed(2)}`;
+    // Perform calculation based on available fields
+    let result;
+    if (!isNaN(terminalValue) && !isNaN(rfrValue)) {
+        result = terminalValue / (1 + rfrValue / 100);
+    } else if (!isNaN(rfrValue) && !isNaN(earningsValue)) {
+        result = earningsValue / (rfrValue / 100);
+    } else if (!isNaN(terminalValue) && !isNaN(earningsValue)) {
+        result = (earningsValue / terminalValue) * 100;
     }
 
-    resultDiv.style.display = 'block';
+    // Display result if calculated
+    if (result !== undefined) {
+        resultContainer.textContent = `Calculated Value: ${result.toFixed(2)}`;
+        resultContainer.style.display = 'block';
+    }
 }
