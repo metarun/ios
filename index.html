@@ -8,6 +8,7 @@
     <title>% Calculator</title>
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234A90E2'/%3E%3Ctext x='50' y='50' font-family='Arial' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E%25%3C/text%3E%3C/svg%3E">
     <style>
+        /* CSS for styling the layout */
         * {
             margin: 0;
             padding: 0;
@@ -135,15 +136,6 @@
             font-size: 14px;
             margin-top: 5px;
         }
-
-        .install-prompt {
-            text-align: center;
-            padding: 10px;
-            background: #f0f9ff;
-            border-radius: 8px;
-            margin-top: 20px;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -151,6 +143,7 @@
         <h1>Percentage Calculator</h1>
     </div>
 
+    <!-- Percentage Calculator Section -->
     <div class="card">
         <div class="input-group">
             <label for="xValue">Initial Value (X)</label>
@@ -164,8 +157,8 @@
             <div id="yError" class="error"></div>
         </div>
 
-        <button class="calculate-btn" onclick="calculate()">Calculate</button>
-        <button class="clear-btn" onclick="clearFields()">Clear</button>
+        <button class="calculate-btn" onclick="calculatePercentage()">Calculate</button>
+        <button class="clear-btn" onclick="clearPercentageFields()">Clear</button>
 
         <div id="result" class="result">
             <div class="result-row">
@@ -183,75 +176,35 @@
         </div>
     </div>
 
-    <div id="installPrompt" class="install-prompt">
-        📱 Add this app to your home screen:<br>
-        Tap the share button (📤) and choose "Add to Home Screen"
+    <!-- Terminal Value Calculator Section -->
+    <div class="card">
+        <h2>Terminal Value Calculator</h2>
+        
+        <div class="input-group">
+            <label for="terminalValue">Terminal Value (TV)</label>
+            <input type="number" id="terminalValue" placeholder="Enter terminal value" step="any">
+        </div>
+
+        <div class="input-group">
+            <label for="rfrValue">Risk-Free Rate (RFR) %</label>
+            <input type="number" id="rfrValue" placeholder="Enter risk-free rate" step="any">
+        </div>
+
+        <div class="input-group">
+            <label for="earningsValue">Earnings</label>
+            <input type="number" id="earningsValue" placeholder="Enter earnings" step="any">
+        </div>
+
+        <button class="calculate-btn" onclick="calculateTerminalValue()">Calculate</button>
+        <div id="terminalResult" class="result">
+            <div class="result-row">
+                <span class="result-label">Calculated Value:</span>
+                <span id="calculatedValue" class="result-value"></span>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Show install prompt for iOS users
-        if (navigator.standalone !== true) {
-            document.getElementById('installPrompt').style.display = 'block';
-        }
-
-        function calculate() {
-            clearErrors();
-            const xInput = document.getElementById('xValue');
-            const yInput = document.getElementById('yValue');
-            const resultDiv = document.getElementById('result');
-            
-            const x = parseFloat(xInput.value);
-            const y = parseFloat(yInput.value);
-
-            if (isNaN(x)) {
-                showError('xError', 'Please enter a valid number');
-                return;
-            }
-            if (isNaN(y)) {
-                showError('yError', 'Please enter a valid number');
-                return;
-            }
-            if (x === 0) {
-                showError('xError', 'Initial value cannot be zero');
-                return;
-            }
-
-            // Calculate Y as percentage of X
-            const yPercentOfX = (y / x) * 100;
-
-            // Calculate change
-            const absoluteChange = y - x;
-            const percentageChange = (absoluteChange / Math.abs(x)) * 100;
-            
-            // Update results
-            document.getElementById('yPercentOfX').textContent = 
-                `${yPercentOfX.toFixed(2)}%`;
-            document.getElementById('percentageChange').textContent = 
-                `${percentageChange.toFixed(2)}%`;
-            document.getElementById('absoluteChange').textContent = 
-                absoluteChange.toFixed(2);
-
-            resultDiv.style.display = 'block';
-            resultDiv.className = 'result ' + (percentageChange >= 0 ? 'positive' : 'negative');
-        }
-
-        function clearFields() {
-            document.getElementById('xValue').value = '';
-            document.getElementById('yValue').value = '';
-            document.getElementById('result').style.display = 'none';
-            clearErrors();
-        }
-
-        function showError(elementId, message) {
-            const errorDiv = document.getElementById(elementId);
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function clearErrors() {
-            document.getElementById('xError').style.display = 'none';
-            document.getElementById('yError').style.display = 'none';
-        }
-    </script>
+    <script src="percentageCalculator.js"></script>
+    <script src="terminalValueCalculator.js"></script>
 </body>
 </html>
