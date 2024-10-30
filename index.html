@@ -7,50 +7,52 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Calculator</h1>
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('percentageTab')">Percentage Calculator</div>
-        <div class="tab" onclick="showTab('terminalValueTab')">Terminal Value Calculator</div>
-    </div>
-
-    <div id="percentageTab" class="card">
-        <div class="input-group">
-            <label for="xValue">Initial Value (X)</label>
-            <input type="number" id="xValue" placeholder="Enter initial value" step="any">
-            <div id="xError" class="error"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Calculator</h1>
         </div>
 
-        <div class="input-group">
-            <label for="yValue">Final Value (Y)</label>
-            <input type="number" id="yValue" placeholder="Enter final value" step="any">
-            <div id="yError" class="error"></div>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('percentageTab')">Percentage Calculator</div>
+            <div class="tab" onclick="showTab('terminalValueTab')">Terminal Value Calculator</div>
         </div>
 
-        <button class="calculate-btn" onclick="calculatePercentage()">Calculate</button>
-        <div id="percentageResult" class="result"></div>
-    </div>
+        <div id="percentageTab" class="card">
+            <div class="input-group">
+                <label for="xValue">Initial Value (X)</label>
+                <input type="number" id="xValue" placeholder="Enter initial value" step="any">
+                <div id="xError" class="error"></div>
+            </div>
 
-    <div id="terminalValueTab" class="card" style="display: none;">
-        <div class="input-group">
-            <label for="terminalValue">Terminal Value (TV)</label>
-            <input type="number" id="terminalValue" placeholder="Enter terminal value" step="any">
+            <div class="input-group">
+                <label for="yValue">Final Value (Y)</label>
+                <input type="number" id="yValue" placeholder="Enter final value" step="any">
+                <div id="yError" class="error"></div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculatePercentage()">Calculate</button>
+            <div id="percentageResult" class="result"></div>
         </div>
 
-        <div class="input-group">
-            <label for="rfrValue">Risk-Free Rate (%)</label>
-            <input type="number" id="rfrValue" placeholder="Enter risk-free rate" step="any">
-        </div>
+        <div id="terminalValueTab" class="card" style="display: none;">
+            <div class="input-group">
+                <label for="terminalValue">Terminal Value (TV)</label>
+                <input type="number" id="terminalValue" placeholder="Enter terminal value" step="any">
+            </div>
 
-        <div class="input-group">
-            <label for="earningsValue">Earnings</label>
-            <input type="number" id="earningsValue" placeholder="Enter earnings" step="any">
-        </div>
+            <div class="input-group">
+                <label for="rfrValue">Risk-Free Rate (%)</label>
+                <input type="number" id="rfrValue" placeholder="Enter risk-free rate" step="any">
+            </div>
 
-        <button class="calculate-btn" onclick="calculateTerminalValue()">Calculate</button>
-        <div id="terminalResult" class="result"></div>
+            <div class="input-group">
+                <label for="earningsValue">Earnings</label>
+                <input type="number" id="earningsValue" placeholder="Enter earnings" step="any">
+            </div>
+
+            <button class="calculate-btn" onclick="calculateTerminalValue()">Calculate</button>
+            <div id="terminalResult" class="result"></div>
+        </div>
     </div>
 
     <script src="percentageCalculator.js"></script>
