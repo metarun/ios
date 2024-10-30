@@ -5,12 +5,10 @@ function calculatePercentage() {
     const yError = document.getElementById('yError');
     const resultContainer = document.getElementById('percentageResult');
 
-    // Clear previous errors and result
     xError.style.display = 'none';
     yError.style.display = 'none';
     resultContainer.style.display = 'none';
 
-    // Input validation
     if (isNaN(xValue) || isNaN(yValue)) {
         if (isNaN(xValue)) {
             xError.textContent = 'Please enter a valid number for X.';
@@ -23,7 +21,6 @@ function calculatePercentage() {
         return;
     }
 
-    // Calculation
     const percentageChange = ((yValue - xValue) / xValue) * 100;
     resultContainer.textContent = `Percentage Change: ${percentageChange.toFixed(2)}%`;
     resultContainer.style.display = 'block';
